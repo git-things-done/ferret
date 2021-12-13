@@ -1,5 +1,5 @@
 import * as github from '@actions/github'
-import { debug, getInput } from '@actions/core'
+import { debug, getInput, notice } from '@actions/core'
 import { IssueCommentEvent } from '@octokit/webhooks-definitions/schema'
 import { ferret, parseQuery } from './engine'
 
@@ -39,7 +39,10 @@ const updateComment = async (body: string) => {
 }
 
 const query = parseQuery(ctx.comment.body)
-if (!query) throw new Error("could not parse query")
-await updateComment(`ferret: active: ${query}`)
-const found = await ferret(query, sniff())
-await updateComment(found ?? `ferret: error: noop: ${query}`)
+if (query) {
+  await updateComment(`ferret: active: ${query}`)
+  const found = await ferret(query, sniff())
+  await updateComment(found ?? `ferret: error: noop: ${query}`)
+} else {
+  notice("No query found in comment")
+}

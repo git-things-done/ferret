@@ -8323,11 +8323,14 @@ const updateComment = async (body) => {
     });
 };
 const query = (0,_engine__WEBPACK_IMPORTED_MODULE_2__/* .parseQuery */ .m)(ctx.comment.body);
-if (!query)
-    throw new Error("could not parse query");
-await updateComment(`ferret: active: ${query}`);
-const found = await (0,_engine__WEBPACK_IMPORTED_MODULE_2__/* .ferret */ .T)(query, sniff());
-await updateComment(found ?? `ferret: error: noop: ${query}`);
+if (query) {
+    await updateComment(`ferret: active: ${query}`);
+    const found = await (0,_engine__WEBPACK_IMPORTED_MODULE_2__/* .ferret */ .T)(query, sniff());
+    await updateComment(found ?? `ferret: error: noop: ${query}`);
+}
+else {
+    (0,_actions_core__WEBPACK_IMPORTED_MODULE_1__.notice)("No query found in comment");
+}
 
 __webpack_handle_async_dependencies__();
 }, 1);
