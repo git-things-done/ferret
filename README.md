@@ -57,4 +57,18 @@ The ferret will search do a reverse chronological search for a comment with a
 markdown title matching `topic`, if it finds it it will replace the comment
 text with what it found.
 
+## For Example
+
+If you create a new comment with the text: `/ferret topic`, the ferret would
+look backwards through all your issues until it found a comment with this
+content:
+
+```markdown
+# topic
+
+foo bar baz.
+```
+
+The ferret would then replace the text `/ferret topic` with the above markdown.
+
 [GitTD]: https://github.com/git-things-done
