@@ -1,0 +1,13 @@
+name: “Ferret” for Git Things Done
+description: >
+  Fetches comments from old GitTD entries that match a query.
+inputs:
+  token:
+    default: ${{ github.token }}
+runs:
+  using: node16
+  main: dist/index.js
+
+branding:
+  icon: check-square
+  color: green
