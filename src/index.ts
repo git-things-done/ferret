@@ -43,6 +43,11 @@ if (query) {
   await updateComment(`ferret: active: ${query}`)
   const found = await ferret(query, sniff())
   await updateComment(found ?? `ferret: error: noop: ${query}`)
+  if (found) {
+    octokit.rest.issues.addLabels({
+      repo, owner, issue_number: ctx.issue.number, labels: ['ferret']
+    })
+  }
 } else {
   notice("No query found in comment")
 }
