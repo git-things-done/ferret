@@ -8263,7 +8263,6 @@ async function ferret(query, comments) {
         return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
     }
     for await (const comment of comments) {
-        (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.debug)(`comment: ${comment}`);
         const match = comment.trim().match(/^#+\s*(.*?)\s*($|\n)/);
         if (match && sanitize(match[1]) == query)
             return comment;
@@ -8318,6 +8317,7 @@ async function* sniff() {
     }
 }
 const updateComment = async (body) => {
+    (0,_actions_core__WEBPACK_IMPORTED_MODULE_1__.debug)("Updating comment");
     await octokit.rest.issues.updateComment({
         repo, owner, body, comment_id: ctx.comment.id,
     });
@@ -8327,6 +8327,12 @@ if (query) {
     await updateComment(`ferret: active: ${query}`);
     const found = await (0,_engine__WEBPACK_IMPORTED_MODULE_2__/* .ferret */ .T)(query, sniff());
     await updateComment(found ?? `ferret: error: noop: ${query}`);
+    if (found) {
+        (0,_actions_core__WEBPACK_IMPORTED_MODULE_1__.debug)("Adding label");
+        await octokit.rest.issues.addLabels({
+            repo, owner, issue_number: ctx.issue.number, labels: ['ferret']
+        });
+    }
 }
 else {
     (0,_actions_core__WEBPACK_IMPORTED_MODULE_1__.notice)("No query found in comment");

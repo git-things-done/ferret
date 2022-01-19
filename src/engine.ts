@@ -15,7 +15,6 @@ export async function ferret(query: string, comments: AsyncGenerator<string, voi
   }
 
   for await (const comment of comments) {
-    debug(`comment: ${comment}`)
     const match = comment.trim().match(/^#+\s*(.*?)\s*($|\n)/)
     if (match && sanitize(match[1]) == query) return comment
   }

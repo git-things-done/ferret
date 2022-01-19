@@ -33,6 +33,7 @@ async function* sniff() {
 }
 
 const updateComment = async (body: string) => {
+  debug("Updating comment")
   await octokit.rest.issues.updateComment({
     repo, owner, body, comment_id: ctx.comment.id,
   })
@@ -44,7 +45,8 @@ if (query) {
   const found = await ferret(query, sniff())
   await updateComment(found ?? `ferret: error: noop: ${query}`)
   if (found) {
-    octokit.rest.issues.addLabels({
+    debug("Adding label")
+    await octokit.rest.issues.addLabels({
       repo, owner, issue_number: ctx.issue.number, labels: ['ferret']
     })
   }
